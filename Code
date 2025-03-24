@@ -1,0 +1,29 @@
+import numpy as np 
+import matplotlib.pyplot as plt
+from sklearn.mixture import GaussianMixture 
+
+np.random.seed(70)
+
+clientes_economicos = np.random.normal(loc=50, scale=10, size=500)
+clientes_gastadores = np.random.normal(loc=300, scale=10, size=900)
+
+compras = np.concatenate([clientes_economicos, clientes_gastadores])
+
+plt.hist(compras, bins=30, density=True, alpha=0.6, color='blue')
+plt.title('Distribuição de Gastos dos Clientes')
+plt.xlabel('Valor de Compra')
+plt.ylabel('Densidade')
+plt.show()
+
+gmm = GaussianMixture(n_components=2)
+gmm.fit(compras.reshape(-1, 1))
+
+compras_sinteticas = gmm.sample(1000)[0]
+
+plt.hist(compras, bins=30, density=True, alpha=0.5, color="red", label='Gastos Reais')
+plt.hist(compras_sinteticas, bins=30, density=True, alpha=0.5, color='green', label='Dados Gerados')
+plt.title('Comparação: Padrão de Gastos dos Clientes')
+plt.xlabel('Valor de Compra')
+plt.ylabel('Densidade')
+plt.legend()
+plt.show()
